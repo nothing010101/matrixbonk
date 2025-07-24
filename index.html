@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Matrix Bonk</title>
+  <style>
+    html, body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -58%);
+      text-align: center;
+      z-index: 10;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+      max-width: 90%;
+    }
+    .overlay h1 {
+      font-size: 52px;
+      letter-spacing: 10px;
+      margin-bottom: 20px;
+    }
+    .overlay p {
+      font-size: 18px;
+      color: #b6fcb6;
+      margin-top: 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-shadow: none;
+    }
+    .info {
+      margin-top: 30px;
+      font-size: 15px;
+      color: #00ff00;
+    }
+    .info p {
+      margin: 8px 0;
+    }
+    .ca-box {
+      background: #000;
+      border: 1px solid #00ff00;
+      padding: 10px;
+      border-radius: 5px;
+      color: #00ff00;
+      width: 320px;
+      margin: 12px auto;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ca-box input {
+      background: transparent;
+      border: none;
+      color: #00ff00;
+      width: 240px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    .ca-box button {
+      background: #00ff00;
+      color: black;
+      border: none;
+      padding: 4px 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .buttons {
+      margin-top: 35px;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+    .btn-link, .icon-link {
+      background: #00ff00;
+      color: black;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 0 0 8px #00ff00;
+      font-size: 15px;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 100px;
+    }
+    .btn-link:hover, .icon-link:hover {
+      background: black;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+    }
+    .icon-link img {
+      width: 28px;
+      height: 28px;
+      filter: brightness(0) invert(1);
+      margin: 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="overlay">
+    <h1>MATRIX BONK</h1>
+    <p>
+      MATRIX BONK is the ultimate memecoin fusion — born on Solana, now unleashed on Base Chain. 
+      Fueled by speed, memes, and the chaos of the Matrix. Enter the bonkverse.
+    </p>
+
+    <div class="info">
+      <p>💰 Total Supply: 1,000,000,000 BONK</p>
+      <div class="ca-box">
+        <input type="text" id="caInput" readonly value="0x1234...ABCD1234" />
+        <button onclick="copyCA()">Copy</button>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <a class="btn-link" href="https://uniswap.org" target="_blank">BUY</a>
+      <a class="icon-link" href="https://t.me" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" />
+      </a>
+      <a class="icon-link" href="https://dexscreener.com" target="_blank">
+        <img src="https://cryptologos.cc/logos/uniswap-uni-logo.svg?v=030" alt="Dexscreener" />
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function copyCA() {
+      const input = document.getElementById("caInput");
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Contract Address copied!");
+    }
+
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = Array(columns).fill(1);
+    const chars = '0101010011010101';
+    const text = "MATRIX BONK";
+    const maskCols = [];
+
+    const startCol = Math.floor((columns - text.length) / 2);
+    for (let i = 0; i < text.length; i++) {
+      maskCols[startCol + i] = text[i];
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0F0';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars.charAt(Math.floor(Math.random() * chars.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        if (maskCols[i]) {
+          ctx.fillText(maskCols[i], x, y);
+        } else {
+          ctx.fillText(char, x, y);
+        }
+
+        if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
