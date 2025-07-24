@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MATRIX BONK</title>
+  <title>Matrix Bonk</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
       overflow: hidden;
       background: black;
+      color: #0f0;
       font-family: monospace;
-      color: #00ff00;
       text-align: center;
     }
 
@@ -23,88 +23,102 @@
     }
 
     .content {
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #00ff00;
-      text-shadow: 0 0 15px #00ff00;
+      position: relative;
+      top: 20vh;
+      color: #0f0;
+      text-shadow: 0 0 10px #0f0;
+      animation: fadeIn 2s ease-in-out;
     }
 
     h1 {
       font-size: 48px;
-      margin-bottom: 20px;
-      opacity: 0;
-      animation: fadeGlow 2s ease-in-out forwards;
+      margin-bottom: 10px;
     }
 
-    p, .info, .ca-box, .buttons, .terminal {
-      opacity: 0;
-      animation: fadeGlow 2s ease-in-out forwards;
+    p {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      font-size: 16px;
+      color: #aaffaa;
     }
 
-    .info { animation-delay: 2.5s; margin-top: 10px; }
-    .ca-box { animation-delay: 3.5s; margin-top: 10px; }
-    .buttons { animation-delay: 4.5s; margin-top: 20px; }
-    .terminal { animation-delay: 6s; margin-top: 40px; }
-
-    @keyframes fadeGlow {
-      0% { opacity: 0; text-shadow: none; }
-      100% { opacity: 1; text-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00; }
+    .info {
+      font-size: 14px;
+      color: #77ff77;
+      margin: 10px 0;
     }
 
-    .ca-box input {
-      background: #000;
+    .copy-box {
+      background: rgba(0, 255, 0, 0.1);
       border: 1px solid #0f0;
-      color: #0f0;
-      padding: 5px;
+      padding: 10px;
+      margin: 10px auto;
       width: 300px;
-      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: all;
     }
 
     .buttons a {
       display: inline-block;
-      margin: 5px 10px;
+      margin: 10px;
       padding: 10px 20px;
-      background: #000;
+      background: rgba(0, 255, 0, 0.1);
       border: 1px solid #0f0;
       color: #0f0;
       text-decoration: none;
-      transition: all 0.3s ease;
+      border-radius: 5px;
+      transition: 0.3s;
     }
 
     .buttons a:hover {
       background: #0f0;
-      color: #000;
+      color: black;
     }
 
-    #openTerminalBtn, #countdown {
-      display: inline-block;
-      margin-top: 20px;
-      font-size: 20px;
+    #openTerminalBtn {
+      margin-top: 30px;
+      padding: 10px 30px;
+      font-size: 16px;
       background: transparent;
       border: 1px solid #0f0;
-      padding: 10px 20px;
-      cursor: pointer;
       color: #0f0;
-      text-shadow: 0 0 10px #0f0;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 4px;
+    }
+
+    #openTerminalBtn:hover {
+      background: #0f0;
+      color: black;
     }
 
     #countdown {
-      font-weight: bold;
+      margin-top: 20px;
+      font-size: 20px;
+      color: #00ff00;
+      text-shadow: 0 0 10px #0f0;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0 }
+      to { opacity: 1 }
     }
   </style>
 </head>
 <body>
   <canvas id="matrixCanvas"></canvas>
+
   <div class="content">
     <h1>MATRIX BONK</h1>
-    <p class="info">BONK, the infamous Solana meme token, has entered the BASE realm. Unleashing chaos with speed, community, and pure digital rebellion. Welcome to the Matrix.</p>
-    
-    <div class="ca-box">
-      <p>SUPPLY: 1,000,000,000</p>
-      <input type="text" id="caInput" value="0xYourContractAddressHere" readonly onclick="this.select();document.execCommand('copy');" />
-    </div>
+    <p>
+      BONK is no longer just a meme. It’s a signal in the matrix.  
+      After dominating Solana, BONK is now unleashed on Base Chain — faster, meaner, and ready to bonk the system.
+    </p>
+
+    <div class="info">Total Supply: 1,000,000,000 BONK</div>
+    <div class="copy-box" onclick="copyCA()">CA: 0x1234abcd5678efgh90ijklmnopqrstuv</div>
 
     <div class="buttons">
       <a href="https://uniswap.org" target="_blank">BUY</a>
@@ -112,10 +126,8 @@
       <a href="https://dexscreener.com" target="_blank">Dexscreener</a>
     </div>
 
-    <div class="terminal">
-      <button id="openTerminalBtn" onclick="startCountdown()">OPEN TERMINAL</button>
-      <div id="countdown" style="display:none;"></div>
-    </div>
+    <button id="openTerminalBtn" onclick="startCountdown()">OPEN TERMINAL</button>
+    <div id="countdown"></div>
   </div>
 
   <script>
@@ -146,11 +158,16 @@
 
     setInterval(drawMatrix, 33);
 
+    function copyCA() {
+      navigator.clipboard.writeText("0x1234abcd5678efgh90ijklmnopqrstuv").then(() => {
+        alert("CA copied!");
+      });
+    }
+
     function startCountdown() {
       const now = new Date().getTime();
       const futureTime = now + 3 * 24 * 60 * 60 * 1000;
       localStorage.setItem("terminalUnlockTime", futureTime);
-      document.getElementById("openTerminalBtn").style.display = "none";
       document.getElementById("countdown").style.display = "block";
       updateCountdown();
     }
@@ -164,6 +181,7 @@
 
       if (diff <= 0) {
         document.getElementById("countdown").innerText = "TERMINAL UNLOCKED";
+        document.getElementById("openTerminalBtn").style.display = "none";
         return;
       }
 
@@ -181,9 +199,17 @@
     window.onload = () => {
       const stored = localStorage.getItem("terminalUnlockTime");
       if (stored) {
-        document.getElementById("openTerminalBtn").style.display = "none";
-        document.getElementById("countdown").style.display = "block";
-        updateCountdown();
+        const now = new Date().getTime();
+        const unlockTime = parseInt(stored);
+        if (now >= unlockTime) {
+          document.getElementById("countdown").style.display = "block";
+          document.getElementById("countdown").innerText = "TERMINAL UNLOCKED";
+          document.getElementById("openTerminalBtn").style.display = "none";
+        } else {
+          document.getElementById("countdown").style.display = "block";
+          document.getElementById("openTerminalBtn").style.display = "inline-block";
+          updateCountdown();
+        }
       }
     };
   </script>
