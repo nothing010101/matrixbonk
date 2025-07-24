@@ -8,132 +8,111 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: black;
-      color: #00ff00;
-      font-family: monospace;
       overflow: hidden;
+      background: black;
+      font-family: monospace;
+      color: #00ff00;
+      text-align: center;
     }
+
     canvas {
       position: fixed;
       top: 0;
       left: 0;
       z-index: -1;
     }
-    .center {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      font-size: 3em;
-      opacity: 0;
-      animation: fadeGlow 2s ease forwards;
-    }
-    p, .info, .ca-box, .buttons {
-      opacity: 0;
-      animation: fadeGlow 2s ease forwards;
-    }
-    .fade-delay-1 { animation-delay: 2.5s; }
-    .fade-delay-2 { animation-delay: 3.8s; }
-    .fade-delay-3 { animation-delay: 5s; }
-    .fade-delay-4 { animation-delay: 6s; }
 
-    .info, .ca-box {
-      margin-top: 10px;
-      font-size: 1.1em;
+    .content {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #00ff00;
+      text-shadow: 0 0 15px #00ff00;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeGlow 2s ease-in-out forwards;
+    }
+
+    p, .info, .ca-box, .buttons, .terminal {
+      opacity: 0;
+      animation: fadeGlow 2s ease-in-out forwards;
+    }
+
+    .info { animation-delay: 2.5s; margin-top: 10px; }
+    .ca-box { animation-delay: 3.5s; margin-top: 10px; }
+    .buttons { animation-delay: 4.5s; margin-top: 20px; }
+    .terminal { animation-delay: 6s; margin-top: 40px; }
+
+    @keyframes fadeGlow {
+      0% { opacity: 0; text-shadow: none; }
+      100% { opacity: 1; text-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00; }
     }
 
     .ca-box input {
-      background: black;
-      color: #00ff00;
-      border: 1px solid #00ff00;
-      padding: 6px 10px;
-      font-family: monospace;
-      width: 250px;
+      background: #000;
+      border: 1px solid #0f0;
+      color: #0f0;
+      padding: 5px;
+      width: 300px;
       text-align: center;
     }
 
-    .buttons {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
     .buttons a {
+      display: inline-block;
+      margin: 5px 10px;
       padding: 10px 20px;
-      background: black;
-      border: 1px solid #00ff00;
+      background: #000;
+      border: 1px solid #0f0;
+      color: #0f0;
       text-decoration: none;
-      color: #00ff00;
-      font-weight: bold;
-      border-radius: 5px;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
     }
 
     .buttons a:hover {
-      background: #00ff00;
-      color: black;
-    }
-
-    @keyframes fadeGlow {
-      0% {
-        opacity: 0;
-        text-shadow: none;
-      }
-      100% {
-        opacity: 1;
-        text-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00;
-      }
-    }
-
-    .terminal-section {
-      margin-top: 40px;
+      background: #0f0;
+      color: #000;
     }
 
     #openTerminalBtn, #countdown {
+      display: inline-block;
       margin-top: 20px;
-      font-size: 1.2em;
-      padding: 10px 30px;
-      border: 1px solid #00ff00;
-      background: black;
-      color: #00ff00;
+      font-size: 20px;
+      background: transparent;
+      border: 1px solid #0f0;
+      padding: 10px 20px;
       cursor: pointer;
-      border-radius: 5px;
+      color: #0f0;
+      text-shadow: 0 0 10px #0f0;
     }
 
     #countdown {
-      font-size: 1.5em;
-      text-shadow: 0 0 8px #00ff00;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <canvas id="matrixCanvas"></canvas>
-
-  <div class="center">
-    <h1 class="fade-in">MATRIX BONK</h1>
-    <p class="fade-in fade-delay-1">
-      BONK, the brutal memecoin from Solana, now descends into Base Chain. A movement powered by speed, chaos, and community. Welcome to the matrix.
-    </p>
-
-    <div class="info fade-in fade-delay-2">Total Supply: 1,000,000,000 BONK</div>
-    <div class="ca-box fade-in fade-delay-2">
-      Contract Address:<br />
-      <input id="caInput" type="text" readonly value="0xABCDEF1234567890ABCDEF1234567890ABCDEF12" onclick="this.select();document.execCommand('copy')" />
+  <div class="content">
+    <h1>MATRIX BONK</h1>
+    <p class="info">BONK, the infamous Solana meme token, has entered the BASE realm. Unleashing chaos with speed, community, and pure digital rebellion. Welcome to the Matrix.</p>
+    
+    <div class="ca-box">
+      <p>SUPPLY: 1,000,000,000</p>
+      <input type="text" id="caInput" value="0xYourContractAddressHere" readonly onclick="this.select();document.execCommand('copy');" />
     </div>
 
-    <div class="buttons fade-in fade-delay-3">
+    <div class="buttons">
       <a href="https://uniswap.org" target="_blank">BUY</a>
       <a href="https://t.me" target="_blank">Telegram</a>
       <a href="https://dexscreener.com" target="_blank">Dexscreener</a>
     </div>
 
-    <div class="terminal-section fade-in fade-delay-4">
+    <div class="terminal">
       <button id="openTerminalBtn" onclick="startCountdown()">OPEN TERMINAL</button>
       <div id="countdown" style="display:none;"></div>
     </div>
@@ -167,13 +146,13 @@
 
     setInterval(drawMatrix, 33);
 
-    // Countdown logic
     function startCountdown() {
       const now = new Date().getTime();
-      const futureTime = now + 3 * 24 * 60 * 60 * 1000; // 3 days
+      const futureTime = now + 3 * 24 * 60 * 60 * 1000;
       localStorage.setItem("terminalUnlockTime", futureTime);
       document.getElementById("openTerminalBtn").style.display = "none";
       document.getElementById("countdown").style.display = "block";
+      updateCountdown();
     }
 
     function updateCountdown() {
@@ -199,7 +178,6 @@
       setTimeout(updateCountdown, 1000);
     }
 
-    // On page load
     window.onload = () => {
       const stored = localStorage.getItem("terminalUnlockTime");
       if (stored) {
