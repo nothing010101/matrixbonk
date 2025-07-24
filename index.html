@@ -2,104 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Matrix Bonk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MATRIX BONK</title>
   <style>
     html, body {
       margin: 0;
-      overflow: hidden;
+      padding: 0;
       background: black;
       color: #00ff00;
       font-family: monospace;
+      overflow: hidden;
     }
     canvas {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
+      z-index: -1;
     }
-    .overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -60%);
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
-      z-index: 10;
-      color: #00ff00;
+      padding: 20px;
     }
     h1 {
-      font-size: 48px;
-      letter-spacing: 8px;
+      font-size: 3em;
       opacity: 0;
+      animation: fadeGlow 2s ease forwards;
     }
-    p {
-      font-size: 16px;
-      color: #cccccc;
-      max-width: 500px;
-      margin: 20px auto;
-      text-shadow: none;
+    p, .info, .ca-box, .buttons {
       opacity: 0;
+      animation: fadeGlow 2s ease forwards;
     }
-    .info {
-      font-size: 14px;
+    .fade-delay-1 { animation-delay: 2.5s; }
+    .fade-delay-2 { animation-delay: 3.8s; }
+    .fade-delay-3 { animation-delay: 5s; }
+    .fade-delay-4 { animation-delay: 6s; }
+
+    .info, .ca-box {
       margin-top: 10px;
-      color: #00ff00;
-      opacity: 0;
+      font-size: 1.1em;
     }
-    .ca-box {
-      margin-top: 10px;
-      background: #111;
-      padding: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      border-radius: 5px;
-      opacity: 0;
-    }
+
     .ca-box input {
-      background: transparent;
-      border: none;
-      color: #00ff00;
-      width: 260px;
-      font-family: monospace;
-    }
-    .ca-box button {
-      background: #00ff00;
-      border: none;
-      color: black;
-      padding: 5px 10px;
-      border-radius: 3px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .buttons {
-      margin-top: 25px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      opacity: 0;
-    }
-    .buttons a {
-      text-decoration: none;
-      padding: 10px 18px;
-      background: #00ff00;
-      color: black;
-      font-weight: bold;
-      border-radius: 6px;
-      box-shadow: 0 0 8px #00ff00;
-      font-size: 14px;
-      transition: 0.3s;
-    }
-    .buttons a:hover {
       background: black;
       color: #00ff00;
       border: 1px solid #00ff00;
-    }
-    .buttons img {
-      width: 30px;
-      height: 30px;
-      filter: brightness(0) invert(1);
+      padding: 6px 10px;
+      font-family: monospace;
+      width: 250px;
+      text-align: center;
     }
 
-    /* Animasi */
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .buttons a {
+      padding: 10px 20px;
+      background: black;
+      border: 1px solid #00ff00;
+      text-decoration: none;
+      color: #00ff00;
+      font-weight: bold;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .buttons a:hover {
+      background: #00ff00;
+      color: black;
+    }
+
     @keyframes fadeGlow {
       0% {
         opacity: 0;
@@ -110,96 +90,124 @@
         text-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00;
       }
     }
-    .fade-in {
-      animation: fadeGlow 2s ease forwards;
+
+    .terminal-section {
+      margin-top: 40px;
     }
-    .fade-delay-1 { animation-delay: 2.2s; }
-    .fade-delay-2 { animation-delay: 3.2s; }
-    .fade-delay-3 { animation-delay: 4.2s; }
-    .fade-delay-4 { animation-delay: 5.2s; }
+
+    #openTerminalBtn, #countdown {
+      margin-top: 20px;
+      font-size: 1.2em;
+      padding: 10px 30px;
+      border: 1px solid #00ff00;
+      background: black;
+      color: #00ff00;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #countdown {
+      font-size: 1.5em;
+      text-shadow: 0 0 8px #00ff00;
+    }
   </style>
 </head>
 <body>
   <canvas id="matrixCanvas"></canvas>
 
-  <div class="overlay">
+  <div class="center">
     <h1 class="fade-in">MATRIX BONK</h1>
-
     <p class="fade-in fade-delay-1">
-      BONK, the notorious memecoin from Solana, now invades the Base Chain.  
-      Fueled by speed, chaos, and community — it's time to BONK the Matrix.
+      BONK, the brutal memecoin from Solana, now descends into Base Chain. A movement powered by speed, chaos, and community. Welcome to the matrix.
     </p>
 
-    <div class="info fade-in fade-delay-2">Total Supply: <strong>1,000,000,000 BONK</strong></div>
-
+    <div class="info fade-in fade-delay-2">Total Supply: 1,000,000,000 BONK</div>
     <div class="ca-box fade-in fade-delay-2">
-      <input type="text" id="caInput" readonly value="0x1234567890abcdef1234567890abcdef12345678" />
-      <button onclick="copyCA()">Copy CA</button>
+      Contract Address:<br />
+      <input id="caInput" type="text" readonly value="0xABCDEF1234567890ABCDEF1234567890ABCDEF12" onclick="this.select();document.execCommand('copy')" />
     </div>
 
     <div class="buttons fade-in fade-delay-3">
       <a href="https://uniswap.org" target="_blank">BUY</a>
-      <a href="https://t.me" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" /></a>
-      <a href="https://dexscreener.com" target="_blank"><img src="https://cryptologos.cc/logos/uniswap-uni-logo.svg?v=030" alt="Dexscreener" /></a>
+      <a href="https://t.me" target="_blank">Telegram</a>
+      <a href="https://dexscreener.com" target="_blank">Dexscreener</a>
+    </div>
+
+    <div class="terminal-section fade-in fade-delay-4">
+      <button id="openTerminalBtn" onclick="startCountdown()">OPEN TERMINAL</button>
+      <div id="countdown" style="display:none;"></div>
     </div>
   </div>
 
   <script>
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+
     canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 
-    const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
-    const drops = Array(columns).fill(1);
-    const chars = '0101010011010101';
-    const text = "MATRIX BONK";
-    const maskCols = [];
+    const letters = "0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({length: columns}).fill(1);
 
-    const startCol = Math.floor((columns - text.length) / 2);
-    for (let i = 0; i < text.length; i++) {
-      maskCols[startCol + i] = text[i];
-    }
-
-    function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#0F0';
-      ctx.font = fontSize + 'px monospace';
+      ctx.fillStyle = "#0f0";
+      ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
-        const char = chars.charAt(Math.floor(Math.random() * chars.length));
-        const x = i * fontSize;
-        const y = drops[i] * fontSize;
-
-        if (maskCols[i]) {
-          ctx.fillText(maskCols[i], x, y);
-        } else {
-          ctx.fillText(char, x, y);
-        }
-
-        if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
-
-      requestAnimationFrame(draw);
     }
 
-    draw();
+    setInterval(drawMatrix, 33);
 
-    function copyCA() {
-      const input = document.getElementById("caInput");
-      input.select();
-      input.setSelectionRange(0, 99999);
-      navigator.clipboard.writeText(input.value);
-      alert("CA copied: " + input.value);
+    // Countdown logic
+    function startCountdown() {
+      const now = new Date().getTime();
+      const futureTime = now + 3 * 24 * 60 * 60 * 1000; // 3 days
+      localStorage.setItem("terminalUnlockTime", futureTime);
+      document.getElementById("openTerminalBtn").style.display = "none";
+      document.getElementById("countdown").style.display = "block";
     }
 
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
+    function updateCountdown() {
+      const unlockTime = parseInt(localStorage.getItem("terminalUnlockTime"));
+      if (!unlockTime) return;
+
+      const now = new Date().getTime();
+      const diff = unlockTime - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").innerText = "TERMINAL UNLOCKED";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown").innerText =
+        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      setTimeout(updateCountdown, 1000);
+    }
+
+    // On page load
+    window.onload = () => {
+      const stored = localStorage.getItem("terminalUnlockTime");
+      if (stored) {
+        document.getElementById("openTerminalBtn").style.display = "none";
+        document.getElementById("countdown").style.display = "block";
+        updateCountdown();
+      }
+    };
   </script>
 </body>
 </html>
