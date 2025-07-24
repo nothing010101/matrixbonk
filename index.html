@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Matrix Bonk</title>
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       background: black;
-      color: #0f0;
+      color: white;
       font-family: monospace;
-      text-align: center;
+      overflow: hidden;
     }
 
     canvas {
@@ -24,86 +23,92 @@
 
     .content {
       position: relative;
-      top: 20vh;
-      color: #0f0;
-      text-shadow: 0 0 10px #0f0;
-      animation: fadeIn 2s ease-in-out;
+      z-index: 2;
+      text-align: center;
+      padding: 40px 20px;
     }
 
     h1 {
-      font-size: 48px;
-      margin-bottom: 10px;
+      font-size: 2.5em;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
     }
 
     p {
-      max-width: 600px;
-      margin: 0 auto 20px;
-      font-size: 16px;
-      color: #aaffaa;
+      font-size: 1em;
+      max-width: 700px;
+      margin: auto;
+      color: #ccc;
     }
 
-    .info {
-      font-size: 14px;
-      color: #77ff77;
-      margin: 10px 0;
+    .doge-img {
+      width: 120px;
+      margin-top: 20px;
+      opacity: 0.85;
+      filter: drop-shadow(0 0 5px #00ff00);
     }
 
-    .copy-box {
-      background: rgba(0, 255, 0, 0.1);
-      border: 1px solid #0f0;
-      padding: 10px;
-      margin: 10px auto;
-      width: 300px;
-      border-radius: 6px;
-      cursor: pointer;
-      user-select: all;
+    .buttons {
+      margin-top: 30px;
     }
 
     .buttons a {
       display: inline-block;
       margin: 10px;
-      padding: 10px 20px;
-      background: rgba(0, 255, 0, 0.1);
-      border: 1px solid #0f0;
-      color: #0f0;
+      padding: 12px 22px;
+      background: #00ff00;
+      color: black;
       text-decoration: none;
       border-radius: 5px;
+      font-weight: bold;
       transition: 0.3s;
     }
 
     .buttons a:hover {
       background: #0f0;
-      color: black;
+      box-shadow: 0 0 10px #00ff00;
+    }
+
+    .info {
+      margin-top: 30px;
+    }
+
+    .info p {
+      margin: 5px;
+      color: #aaa;
+    }
+
+    .ca-box {
+      background: #111;
+      border: 1px solid #0f0;
+      padding: 10px;
+      margin-top: 10px;
+      color: #0f0;
+      word-break: break-all;
+    }
+
+    #countdown {
+      margin-top: 40px;
+      font-size: 1.2em;
+      color: #00ff00;
+      display: none;
     }
 
     #openTerminalBtn {
-      margin-top: 30px;
-      padding: 10px 30px;
-      font-size: 16px;
-      background: transparent;
-      border: 1px solid #0f0;
+      margin-top: 40px;
+      padding: 10px 25px;
+      background: #000;
       color: #0f0;
+      border: 2px solid #0f0;
+      font-weight: bold;
       cursor: pointer;
+      border-radius: 8px;
       transition: 0.3s;
-      border-radius: 4px;
     }
 
     #openTerminalBtn:hover {
       background: #0f0;
       color: black;
-    }
-
-    #countdown {
-      margin-top: 20px;
-      font-size: 20px;
-      color: #00ff00;
-      text-shadow: 0 0 10px #0f0;
-      display: none;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0 }
-      to { opacity: 1 }
     }
   </style>
 </head>
@@ -111,23 +116,30 @@
   <canvas id="matrixCanvas"></canvas>
 
   <div class="content">
+    <img src="https://i.imgur.com/Xb6G9PB.png" class="doge-img" alt="Bonk Doge">
     <h1>MATRIX BONK</h1>
     <p>
-      BONK is no longer just a meme. It’s a signal in the matrix.  
-      After dominating Solana, BONK is now unleashed on Base Chain — faster, meaner, and ready to bonk the system.
+      BONK is now entering the future on the BASE chain.<br/>
+      Decentralized, meme-powered, and ready to dominate the cryptosphere.<br/>
+      Join the revolution.
     </p>
 
-    <div class="info">Total Supply: 1,000,000,000 BONK</div>
-    <div class="copy-box" onclick="copyCA()">CA: 0x1234abcd5678efgh90ijklmnopqrstuv</div>
-
     <div class="buttons">
-      <a href="https://ape.store" target="_blank">BUY</a>
-      <a href="https://t.me/+HNxp5iVcAxthOTY9" target="_blank">Telegram</a>
-      <a href="https://dexscreener.com/base" target="_blank">Dexscreener</a>
+      <a href="https://uniswap.org" target="_blank">BUY</a>
+      <a href="https://t.me" target="_blank">Telegram</a>
+      <a href="https://dexscreener.com" target="_blank">Dexscreener</a>
     </div>
 
-    <button id="openTerminalBtn" onclick="startCountdown()">OPEN TERMINAL</button>
-    <div id="countdown"></div>
+    <div class="info">
+      <p>Total Supply: <strong>1,000,000,000</strong> BONK</p>
+      <p>Contract Address:</p>
+      <div class="ca-box" id="ca">0x1234567890abcdef1234567890abcdef12345678</div>
+    </div>
+
+    <div>
+      <button id="openTerminalBtn" onclick="startCountdown()">OPEN TERMINAL</button>
+      <div id="countdown">Loading countdown...</div>
+    </div>
   </div>
 
   <script>
@@ -137,38 +149,43 @@
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
-    const letters = "0123456789";
-    const fontSize = 16;
+    const letters = "MATRIXBONK0123456789";
+    const fontSize = 14;
     const columns = canvas.width / fontSize;
-    const drops = Array.from({length: columns}).fill(1);
+    const drops = Array.from({ length: columns }).fill(1);
 
     function drawMatrix() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       ctx.fillStyle = "#0f0";
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
         drops[i]++;
       }
     }
 
     setInterval(drawMatrix, 33);
 
-    function copyCA() {
-      navigator.clipboard.writeText("0x1234abcd5678efgh90ijklmnopqrstuv").then(() => {
-        alert("CA copied!");
-      });
-    }
-
     function startCountdown() {
+      const storedTime = localStorage.getItem("terminalUnlockTime");
+      if (storedTime) {
+        updateCountdown();
+        return;
+      }
+
       const now = new Date().getTime();
       const futureTime = now + 3 * 24 * 60 * 60 * 1000;
       localStorage.setItem("terminalUnlockTime", futureTime);
       document.getElementById("countdown").style.display = "block";
+      document.getElementById("openTerminalBtn").style.display = "none";
       updateCountdown();
     }
 
@@ -207,7 +224,7 @@
           document.getElementById("openTerminalBtn").style.display = "none";
         } else {
           document.getElementById("countdown").style.display = "block";
-          document.getElementById("openTerminalBtn").style.display = "inline-block";
+          document.getElementById("openTerminalBtn").style.display = "none";
           updateCountdown();
         }
       }
