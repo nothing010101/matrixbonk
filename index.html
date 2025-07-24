@@ -164,17 +164,31 @@
       });
     }
 
+    let countdownInterval; // Declare a variable to hold the interval ID
+
     function startCountdown() {
-      const now = new Date().getTime();
-      const futureTime = now + 3 * 24 * 60 * 60 * 1000;
-      localStorage.setItem("terminalUnlockTime", futureTime);
+      const storedUnlockTime = localStorage.getItem("terminalUnlockTime");
+      let unlockTime;
+
+      // If there's no stored time, or if the stored time has already passed,
+      // set a new unlock time. Otherwise, use the stored time.
+      if (!storedUnlockTime || new Date().getTime() >= parseInt(storedUnlockTime)) {
+        unlockTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000; // 3 days from now
+        localStorage.setItem("terminalUnlockTime", unlockTime);
+      } else {
+        unlockTime = parseInt(storedUnlockTime);
+      }
+      
       document.getElementById("countdown").style.display = "block";
-      updateCountdown();
+      updateCountdown(); // Call immediately to show countdown without delay
     }
 
     function updateCountdown() {
       const unlockTime = parseInt(localStorage.getItem("terminalUnlockTime"));
-      if (!unlockTime) return;
+      if (isNaN(unlockTime)) { // Handle cases where localStorage item might be invalid
+          document.getElementById("countdown").style.display = "none";
+          return;
+      }
 
       const now = new Date().getTime();
       const diff = unlockTime - now;
@@ -182,6 +196,7 @@
       if (diff <= 0) {
         document.getElementById("countdown").innerText = "TERMINAL UNLOCKED";
         document.getElementById("openTerminalBtn").style.display = "none";
+        clearInterval(countdownInterval); // Stop the interval when countdown finishes
         return;
       }
 
@@ -193,7 +208,11 @@
       document.getElementById("countdown").innerText =
         `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-      setTimeout(updateCountdown, 1000);
+      // Clear any existing interval before setting a new one to prevent multiple intervals
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+      }
+      countdownInterval = setTimeout(updateCountdown, 1000);
     }
 
     window.onload = () => {
@@ -208,7 +227,7 @@
         } else {
           document.getElementById("countdown").style.display = "block";
           document.getElementById("openTerminalBtn").style.display = "inline-block";
-          updateCountdown();
+          updateCountdown(); // Start updating the countdown from the stored time
         }
       }
     };
